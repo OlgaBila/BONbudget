@@ -9,7 +9,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.meduzzka.finalproject.MainActivity"
     android:weightSum="1"
     android:textAlignment="center"
     android:background="#008B8B"
@@ -27,33 +26,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="95dp"
-        android:text="@string/welcome"
+        android:text="Behnaz's part"
         android:textStyle="bold"
         android:layout_alignParentEnd="true"
         android:layout_margin="20dp"
-        android:id="@+id/welcome"
+        android:id="@+id/wallet"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="36sp"
         android:textColor="@android:color/white" />
-
-    <Button
-        android:text="@string/signIn"
-        android:layout_width="174dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:id="@+id/buttonSignIn" />
-
-    <Button
-        android:text="@string/signUp"
-        android:layout_width="173dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:id="@+id/buttonSignUp" />
-
 
 </LinearLayout>

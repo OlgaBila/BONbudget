@@ -1,6 +1,43 @@
 <resources>
     <string name="app_name">Final Project</string>
     <string name="title_activity_sign_in">Sign in</string>
+    <string name="title_activity_app_toolbar">AppToolbar</string>
+    <string name="welcome">Welcome to BONbudget</string>
+    <string name="signIn">Sign In</string>
+    <string name="signUp">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="login">Login</string>
+    <string name="noAccount">No account yet? Create one</string>
+    <string name="alreadyMember">Already a member? Login</string>
+    <string name="name">Name</string>
+    <string name="profile">Profile</string>
+
+    <string name="loginSuccessfull">Congrats: Login Successfull</string>
+    <string name="noMatch">Email or Password does not match</string>
+    <string name="fieldVaccant">Field Vaccant</string>
+    <string name="enterValidEmail">Please enter a valid email address</string>
+    <string name="passwordChar">Password should between 4 and 10 alphanumeric characters</string>
+    <string name="passwordNoMatch">Password does not match</string>
+    <string name="accountCreated">Account Successfully Created</string>
+    <string name="help_message">Version 1.0, by Olga Bila
+The page is the your profile. You need to enter your expenses
+Once you enter all information, your data will stored for your budget calculation
+    </string>
+    <string name="okButton">OK</string>
+
+
+
+
+
+    <string name="annualIncome">Annual income</string>
+    <string name="monthlyRent">Monthly rent</string>
+    <string name="monthlyMortgage">Monthly mortgage</string>
+    <string name="monthlyCarLoan">Monthly car loan</string>
+    <string name="monthlySavings">Monthly savings</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 
 
 </resources>

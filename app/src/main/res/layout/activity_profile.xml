@@ -1,28 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.meduzzka.finalproject.MainActivity"
-    android:weightSum="1"
-    android:textAlignment="center"
-    android:background="#008B8B">
-    //android:gravity="center">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="402dp"
-        android:id="@+id/listProfile"/>
+    android:showDividers="middle">
 
-    <Button
-        android:text="Create an account"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button" />
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_above="@+id/listProfile"/>
+
+    <RelativeLayout
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.example.meduzzka.finalproject.MainActivity"
+        android:weightSum="1"
+        android:textAlignment="center"
+        android:background="#008B8B">
+
+        <ListView
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:id="@+id/listProfile"
+            android:inputType="number" />
+
+
+        <FrameLayout
+            android:id="@+id/comments_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#008B8B"
+            android:layout_toEndOf="@+id/listProfile">
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+
 </LinearLayout>

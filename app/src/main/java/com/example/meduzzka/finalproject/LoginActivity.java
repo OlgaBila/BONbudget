@@ -1,35 +1,89 @@
 package com.example.meduzzka.finalproject;
 
-import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
+/**
+ * This class represents a Login Activity where user needs to enter email and password
+ *
+ * Created by Olga Bila
+ */
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
+
+    /**
+     * Static integer that represents request for sign up
+     */
     private static final int REQUEST_SIGNUP = 0;
 
+    /**
+     * Object of LoginDataBaseAdapter, used for retrieving and updating database
+     */
+    LoginDataBaseAdapter loginDataBaseAdapter;
 
-    EditText emailText;
-    EditText passwordText;
+    /**
+     * ProgressBar object, used to show progress bar while downloading an image
+     */
+    private ProgressBar progressBar;
+
+    /**
+     * ImageView object, used to show an image for Login page
+     */
+    ImageView imageView;
+
+    /**
+     * Bitmap object, used for representation of a bitmap image
+     */
+    Bitmap imageBitmap;
+
+    /**
+     * URL of image that need to be download
+     */
+    String url = "http://lh3.ggpht.com/hlPm_BqoMc-mLDC4mBGMmv9_lNa0vR3V8XCXj_cnefD0zBtbsnTFm37OWLghm2Or3Us=w350";
+
+    /**
+     * Button object, used for user logIn
+     */
     Button loginButton;
+
+    /**
+     * TextView object, used for transferring to SignUp Activity
+     */
     TextView signupLink;
 
+    /**
+     * The system calls this when creating the activity
+     *
+     * @param savedInstanceState a reference to a Bundle object that is passed into the
+     *                           onCreate method of every Android Activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        emailText = (EditText) findViewById(R.id.input_email);
-        passwordText = (EditText) findViewById(R.id.input_password);
+        loginDataBaseAdapter = new LoginDataBaseAdapter(this);
+        loginDataBaseAdapter = loginDataBaseAdapter.open();
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+        imageView = (ImageView) findViewById(R.id.imageView);
+        new ImageLoaderClass().execute(url);
+
         loginButton = (Button) findViewById(R.id.btn_login);
         signupLink = (TextView) findViewById(R.id.link_signup);
 
@@ -45,111 +99,107 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // Start the Signup activity
+                /** Start the SignUp activity*/
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
     }
 
+    /**
+     * Called after loginButton is pressed
+     * Used for checking email and password with data in database
+     */
     public void login() {
-        Log.d(TAG, "Login");
+        final EditText userEmail = (EditText) findViewById(R.id.input_email);
+        final EditText userPassword = (EditText) findViewById(R.id.input_password);
 
-        if (!validate()) {
-            onLoginFailed();
-            return;
+        String email = userEmail.getText().toString();
+        String password = userPassword.getText().toString();
+        String storedPassword = loginDataBaseAdapter.getSinlgeEntry(email);
+
+        /** Checking email and password with data in database*/
+        if (password.equals(storedPassword)) {
+            Toast.makeText(LoginActivity.this,
+                    R.string.loginSuccessfull, Toast.LENGTH_LONG)
+                    .show();
+            LoginActivity.this.startActivity(new Intent(LoginActivity.this, Profile.class));
+            finish();
+        } else {
+            Toast.makeText(LoginActivity.this,
+                    R.string.noMatch,
+                    Toast.LENGTH_LONG).show();
         }
-
-        loginButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
-
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-
-        // TODO: Implement your own authentication logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
     }
 
-
+    /**
+     * Called on destroy of Activity
+     */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
+    protected void onDestroy() {
+        super.onDestroy();
+        loginDataBaseAdapter.close();
+    }
 
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                this.finish();
+    /**
+     * Helper class for downloading an image
+     */
+    private class ImageLoaderClass extends AsyncTask<String, String, Bitmap> {
+
+        /**
+         * Runs on the UI thread before doInBackground(Params...)
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        /**
+         * Performs a computation on a background thread
+         * @param args the parameters of the task
+         * @return Bitmap object
+         */
+        protected Bitmap doInBackground(String... args) {
+            try {
+                URL url = new URL(args[0]);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                /** Starts the query*/
+                conn.connect();
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == 200) {
+                    InputStream stream = conn.getInputStream();
+
+                    imageBitmap = BitmapFactory.decodeStream(stream);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }
-    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-////        if (requestCode == 5){
-////            Log.i(TAG, "Returned to StartActivity.onActivityResult");
-////        }
-//        if(resultCode == MainActivity.RESULT_OK){
-//            String messagePassed = data.getStringExtra("Response");
-//            if (messagePassed.length() > 0) {
-//                CharSequence text = "ListItemsActivity passed: My information to share";
-//                int duration = Toast.LENGTH_LONG;
-//                Toast toast = Toast.makeText(this, text, duration);
-//                toast.show();
-//            }
-//        }
-//    }
-
-
-    @Override
-    public void onBackPressed() {
-        // disable going back to the MainActivity
-        moveTaskToBack(true);
-    }
-
-    public void onLoginSuccess() {
-        loginButton.setEnabled(true);
-        finish();
-    }
-
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        loginButton.setEnabled(true);
-    }
-
-    public boolean validate() {
-        boolean valid = true;
-
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailText.setError("enter a valid email address");
-            valid = false;
-        } else {
-            emailText.setError(null);
+            return imageBitmap;
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            passwordText.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            passwordText.setError(null);
-        }
+        /**
+         * Runs on the UI thread after doInBackground(Params...).
+         * The specified result is the value returned by doInBackground(Params...)
+         * @param image Bitmap object
+         */
+        protected void onPostExecute(Bitmap image) {
 
-        return valid;
+            if(image != null){
+                if(image != null){
+                    /**
+                     * Sets Bitmap object into an ImageView object that used to
+                     * show an image for Login page
+                     */
+                    imageView.setImageBitmap(image);
+                    progressBar.setVisibility(View.GONE);
+
+                }}
+        }
     }
 }

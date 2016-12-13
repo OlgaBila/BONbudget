@@ -1,27 +1,62 @@
 package com.example.meduzzka.finalproject;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
+/**
+ * This class represents a SignUp Activity where user registered
+ *
+ * Created by Olga Bila
+ */
 public class SignupActivity extends AppCompatActivity {
-    private static final String TAG = "SignupActivity";
-
+    /**
+     * Used to hold user name
+     */
     EditText nameText;
+
+    /**
+     *
+     * Used to hold user email
+     */
     EditText emailText;
+
+    /**
+     * Used to hold user password
+     */
     EditText passwordText;
+
+    /**
+     * Used to hold user password confirmation
+     */
+    EditText confirmPasswordText;
+
+    /**
+     * Button object, used for user signUp
+     */
     Button signupButton;
+
+    /**
+     * TextView object, used for transferring to LogIn Activity
+     */
     TextView loginLink;
 
+    /**
+     * Object of LoginDataBaseAdapter, used for retrieving and updating database
+     */
+    LoginDataBaseAdapter loginDataBaseAdapter;
+
+    /**
+     * The system calls this when creating the activity
+     *
+     * @param savedInstanceState a reference to a Bundle object that is passed into the
+     *                           onCreate method of every Android Activity
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,101 +65,89 @@ public class SignupActivity extends AppCompatActivity {
         nameText = (EditText) findViewById(R.id.input_name);
         emailText = (EditText) findViewById(R.id.input_email);
         passwordText = (EditText) findViewById(R.id.input_password);
+        confirmPasswordText = (EditText) findViewById(R.id.confirm_password);
         signupButton = (Button) findViewById(R.id.btn_signup);
         loginLink = (TextView) findViewById(R.id.link_login);
 
+        loginDataBaseAdapter = new LoginDataBaseAdapter(this);
+        loginDataBaseAdapter = loginDataBaseAdapter.open();
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //signup();
-                SignupActivity.this.startActivity(new Intent(SignupActivity.this, Profile.class));
-            }
-        });
 
         loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
+                SignupActivity.this.startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                 finish();
             }
         });
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signup();
+            }
+        });
+
     }
 
+    /**
+     * Called after signUpButton is pressed
+     * Used for updating database
+     */
     public void signup() {
-        Log.d(TAG, "Signup");
+        String userName = nameText.getText().toString();
+        String userEmail = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+        String confirmPassword = confirmPasswordText.getText().toString();
 
-        if (!validate()) {
-            onSignupFailed();
+        if (userName.equals("") || userEmail.equals("") || password.equals("")
+                || confirmPassword.equals("")) {
+
+            Toast.makeText(getApplicationContext(), R.string.fieldVaccant,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+
+            Toast.makeText(getApplicationContext(), R.string.enterValidEmail,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (password.length() < 4 || password.length() > 10) {
+
+            Toast.makeText(getApplicationContext(), R.string.passwordChar,
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
-        signupButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
-
-        String name = nameText.getText().toString();
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-
-        // TODO: Implement your own signup logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
-    }
-
-
-    public void onSignupSuccess() {
-        signupButton.setEnabled(true);
-        setResult(RESULT_OK, null);
-        finish();
-    }
-
-    public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        signupButton.setEnabled(true);
-    }
-
-    public boolean validate() {
-        boolean valid = true;
-
-        String name = nameText.getText().toString();
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
-
-        if (name.isEmpty() || name.length() < 3) {
-            nameText.setError("at least 3 characters");
-            valid = false;
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.passwordNoMatch, Toast.LENGTH_LONG).show();
+            return;
         } else {
-            nameText.setError(null);
+
+            /**
+             * Inserts data in database
+             */
+            loginDataBaseAdapter.insertEntry(userName, userEmail, password);
+            /**
+             * Show tost if accound created successfully
+             */
+            Toast.makeText(getApplicationContext(),
+                    R.string.accountCreated, Toast.LENGTH_LONG).show();
+            SignupActivity.this.startActivity(new Intent(SignupActivity.this, Profile.class));
+            finish();
+
         }
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailText.setError("enter a valid email address");
-            valid = false;
-        } else {
-            emailText.setError(null);
-        }
+    }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            passwordText.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            passwordText.setError(null);
-        }
-
-        return valid;
+    /**
+     * Called on destroy of Activity
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginDataBaseAdapter.close();
     }
 }

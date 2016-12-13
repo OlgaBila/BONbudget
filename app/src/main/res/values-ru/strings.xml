@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Финальный проект</string>
+    <string name="title_activity_sign_in">Войти</string>
+    <string name="title_activity_app_toolbar">AppToolbar</string>
+    <string name="welcome">Добро пожаловать в BONbudget</string>
+    <string name="signIn">Войти</string>
+    <string name="signUp">Регистрация</string>
+    <string name="email">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="confirmPassword">Подтверждение пароля</string>
+    <string name="login">Войти</string>
+    <string name="noAccount">Еще нет учетной записи? Создать</string>
+    <string name="alreadyMember">Уже зарегистрирован? Войти</string>
+    <string name="name">Имя</string>
+    <string name="profile">Профайл</string>
+    <string name="loginSuccessfull">Добро пожаловать в вашу учетную запись</string>
+    <string name="noMatch">Электронная почта или Пароль введены не правильно</string>
+    <string name="fieldVaccant">Заполните все поля</string>
+    <string name="enterValidEmail">Пожалуйста введите правильную электронную почту</string>
+    <string name="passwordChar">Пароль должен быть между 4 и 10 знаками</string>
+    <string name="passwordNoMatch">Пароль введен не правильно</string>
+    <string name="accountCreated">Учетная запись успешно создана</string>
+
+    <string name="annualIncome">Годовой доход</string>
+    <string name="monthlyRent">Ежемесячная аренда жилья</string>
+    <string name="monthlyMortgage">Ежемесячная ипотека</string>
+    <string name="monthlyCarLoan">Ежемесячная оплата за машину</string>
+    <string name="monthlySavings">Ежемесячные сбережения</string>
+
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+
+    <string name="help_message">Версия 1.0, автор Ольга Белая.
+Эта страница - ваш профайл, вам необходимо ввести ваши доходы.
+Как только вы введете необходимую информацию, ваши данные будут сохранены для подальшего расчета вашего бюджета.
+    </string>
+    <string name="okButton">Прочитал!</string>
+
+</resources>

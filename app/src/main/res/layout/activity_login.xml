@@ -17,11 +17,12 @@
 
 
 
-    <ImageView android:src="@drawable/budget"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:layout_marginBottom="24dp"
         android:layout_gravity="center_horizontal"
+        android:id="@+id/imageView"
         android:layout_weight="0.20" />
 
     <!-- Email Label -->
@@ -30,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
-        android:hint="Email" />
+        android:hint="@string/email" />
 
 
     <!-- Password Label -->
@@ -39,8 +40,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:hint="Password"/>
+        android:layout_marginBottom="24dp"
+        android:hint="@string/password"/>
 
+
+    <ProgressBar style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/btn_login"
@@ -50,13 +59,13 @@
         android:layout_marginBottom="24dp"
         android:padding="12dp"
         android:textStyle="bold"
-        android:text="Login"/>
+        android:text="@string/login"/>
 
     <TextView android:id="@+id/link_signup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="No account yet? Create one"
+        android:text="@string/noAccount"
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="@android:color/white"
